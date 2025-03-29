@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Google Sheet Table</title>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script>
+      // Load the Google Visualization API
+      google.charts.load('current', {'packages':['table']});
+      google.charts.setOnLoadCallback(drawTable);
+
+      function drawTable() {
+        const query = new google.visualization.Query(
+          'https://docs.google.com/spreadsheets/d/1i6B9nBdCerVG8EHdb7ee109DuSgKS0iEMwbpJyupS6w/gviz/tq?sheet=data'
+        );
+
+        query.send(function(response) {
+          if (response.isError()) {
+            document.getElementById('table-container').innerHTML = 'Failed to load data.';
+            console.error('Error:', response.getMessage(), response.getDetailedMessage());
+            return;
+          }
+
+          const data = response.getDataTable();
+          const table = new google.visualization.Table(document.getElementById('table-container'));
+          table.draw(data, {showRowNumber: true, width: '100%', height: 'auto'});
+        });
+      }
+    </script>
+  </head>
+  <body>
+    <h2>Data from Google Sheet (Tab: data)</h2>
+    <div id="table-container">Loading...</div>
+  </body>
+</html>
